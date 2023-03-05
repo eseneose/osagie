@@ -10,10 +10,10 @@ const Hero = (props) => (
       <LeftSection>
         <SectionTitle main center>
           Welcome To <br />
-          My Personal Portfolio
+          EasyITPro
         </SectionTitle>
         <SectionText>
-            My purpose is to be a reliable solution to most web development chalenges
+        In here, you would find some interesting AI tools that would make your work more efficient with little effort... Enjoy massive productivity boost for <strong>Free</strong>
         </SectionText>
         <Button onClick={props.handleClick}>Learn More</Button>
       </LeftSection>
