@@ -1,0 +1,172 @@
+1. create a useState variable === const [isModalVisible, setIsModalVisible] - useState();
+
+2. create a function to toggle modal === const toggleModal = () => { setIsModalVisible(wasModalVisible => !wasModalVisible)}
+
+3. create new file(inside ModalPopup folder) called BaseModalWrapper.
+
+. create new file(inside ModalPopup) called Modal
+
+5. create a new div in index.html ===  <div id="modal-root"></div>
+
+6. in modal.tsx   ====
+
+	import React from 'react'
+	import ReactDom from 'react-dom'
+
+	interface ModalProps{
+		onBackDropClick: ()=> void;
+	}
+
+	const Overlay = styled.div`
+		background-color: rgba(0,0,0,0.5);
+		position: fixed;
+		height:100%;
+		width:100%;
+		top:0;
+		left:0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	`
+
+	const Modal: React.FC<ModalProps> = ({onBackDropClick, children}) =>{
+		return ReactDOM.createPortal(<Overlay onClick ={onBackDropClick}>
+						<div onClick={e=> e.stopPropagation()}>
+							{children}
+						</div>
+					</Overlay>, document.getElementById('modal-root')!);
+	}
+
+	export default Modal
+
+7. in BaseModalWrapper.tsx ===
+	
+	import React from 'react'
+	import Modal from './Modal'
+	import {DesktopModalContainer, Header, Message, DesktopCloseButton, CloseSign } from './ModalPopup.styles'
+
+	interface BaseModalWrapperProps{
+		isModalVisible: boolean;
+		onBackDropClick: () => void;
+		header: string;
+		message?: string;
+	}
+
+												     //E2
+	const BaseModalWrapper: React.FC<BaseModalWrapperProps> = ({onBackDropClick, isModalVisible, header, message})=>{
+		if(!isModalVisible){
+			return null	
+		};
+		return ( <Modal onBackDropClick={onBackDropClick}>
+				<DesktopModalContainer>
+					
+					<DesktopCloseButton onClick={onBackDropClick}>
+						<CloseSign/>
+					</DesktopCloseButton>
+					<Header> {header}</Header>
+					  {message && <Message>{message}</Message>}
+				</DesktopModalContainer>
+			 </Modal>)
+	}
+
+	export default BaseModalWrapper
+
+8. inmport BaseModalWrapper to the app(where its used) ====
+
+	//the return statement
+	return(
+		<div>
+		<button onClick={toggleModal}> show modal</button>
+		<BaseModalWrapper header={Login} isModalVisible={isModalVisible} onBackDropClick={toggleModal}/>
+		</div>
+	)
+
+9. create ModalPopup.styles.tsx ===
+
+	import styled from 'styled-component'
+
+	const ModalContainer = styled.div`
+			background-color: black;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			position: relative;
+		`;
+
+	export const DesktopModalContainer = styled(ModalContainer)`
+			border-radius: 7px;
+			box-shadow: 0 0 32px rgba(0,0,0,0.5);
+			padding: 40px;
+			width: 40px;
+			font-size: 26px;
+		`;
+
+	export const Header= styled.h3`
+			color: white;
+			font-size: 35px;
+			line-height: 1em;
+			font-weight: 300;
+			margin: 5px 0 10px;
+			text-align: center;
+		`;
+
+	export const Message = styled.p`
+			color: #aaa;
+			font-size: 15px;
+			font-weight: 500;
+			margin: 0 0 36px;
+			text-align: center;
+		`;
+
+	export const CloseSign = styled.div`
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			color: #323232;
+
+			&:before,
+			&:after{
+				position: absolute;
+				left: 10px;
+				top: 10px;
+				content: ' ';
+				height: 20px;
+				width: 2px;
+				background-color:#333;
+			}
+
+			&:before{
+				transform: rotate(45deg);
+			}
+			&:after{
+				transform: rotate(45deg);
+			}
+		`;
+
+
+	const CLOSE_BUTTON_SIZE = 40;
+
+	export const CloseButton = styled.div`
+			position: absolute;
+			width: ${CLOSE_BUTTON_SIZE}px;
+			height: ${CLOSE_BUTTON_SIZE}px;
+			background-color: #c8c8c8;
+			border-radius:50%;
+			cursor: pointer;
+			& > * {
+				opacity:1;
+			}
+			&:hover > * {
+				opacity: 0.4;
+			}
+		`;
+		
+	export const DesktopCloseButton = styled(CloseButton)`
+			top: -${CLOSE_BUTTON_SIZE / 2}px;
+			left: calc(100% -${CLOSE_BUTTON_SIZE / 2}px);
+		`;
+
+10. import react responsive ==== npm i react-responsive @type/react-responsive.
+
+continue from 15 minutes of tutorial part 2  ====== {https://www.youtube.com/watch?v=w8idr57HWq0}
